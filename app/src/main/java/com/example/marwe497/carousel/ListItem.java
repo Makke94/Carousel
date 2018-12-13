@@ -26,4 +26,6 @@ public class ListItem {
     public void setText(String text) {
         this.text = text;
     }
+
+    //TODO Add onClickShit
 }

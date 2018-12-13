@@ -1,11 +1,14 @@
 package com.example.marwe497.carousel;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +19,7 @@ public class Carousel extends LinearLayout {
     private RecyclerView.Adapter Adapter;
     private RecyclerView.LayoutManager LayoutManager;
     private ArrayList<ListItem> itemList = new ArrayList<>();
+    private ProgressBar bar = new ProgressBar(getContext());
 
     public Carousel(Context context) {
         super(context);
@@ -55,6 +59,21 @@ public class Carousel extends LinearLayout {
 
         RecyclerView.scrollToPosition(Integer.MAX_VALUE/2);
 
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        RecyclerView.setLayoutParams(lp);
+
+        RecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull android.support.v7.widget.RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                //TODO Fixa progressbar
+            }
+        });
+
+
+
         this.addView(RecyclerView);
+        this.addView(bar);
     }
 }
