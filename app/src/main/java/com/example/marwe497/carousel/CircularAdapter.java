@@ -41,6 +41,7 @@ class CircularAdapter extends RecyclerView.Adapter<CircularAdapter.ItemViewHolde
     public void onBindViewHolder(@Nullable ItemViewHolder viewHolder, int position) {
         viewHolder.imageView.setImageResource(getItem(position).getImgDrawable());
         viewHolder.txtview.setText(getItem(position).getText());
+        viewHolder.imageView.setOnClickListener(getItem(position).onClickListener(context));
     }
 
     @Override
@@ -62,5 +63,9 @@ class CircularAdapter extends RecyclerView.Adapter<CircularAdapter.ItemViewHolde
             imageView=view.findViewById(R.id.imageView_image);
             txtview=view.findViewById(R.id.textView);
         }
+    }
+
+    public int getTrueLength(){
+        return itemList.size();
     }
 }
