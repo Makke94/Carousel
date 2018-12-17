@@ -33,5 +33,9 @@ public class MainActivity extends AppCompatActivity {
         carousel.addItem(i8);
         carousel.addItem(i9);
 
+        carousel.setImgDimension(75, 100);
+
+
+
     }
 }

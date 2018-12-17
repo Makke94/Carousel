@@ -36,6 +36,7 @@ public class ListItem {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Makes a little toast just to confirm you've clicked the item
                 Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
 
             }

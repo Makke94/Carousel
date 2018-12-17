@@ -11,6 +11,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -23,7 +26,7 @@ import java.util.List;
 public class Carousel extends LinearLayout {
 
     private RecyclerView RecyclerView;
-    private RecyclerView.Adapter Adapter;
+    private CircularAdapter Adapter;
     private RecyclerView.LayoutManager LayoutManager;
     private ArrayList<ListItem> itemList = new ArrayList<>();
     private SeekBar bar = new SeekBar(getContext());
@@ -48,16 +51,32 @@ public class Carousel extends LinearLayout {
         init();
     }
 
+    /**
+     * Adds an item to the carousel
+     * @param item
+     * ListItem to display, with an Image, text and an OnClickListener
+     */
     public void addItem(ListItem item){
         itemList.add(item);
-        Adapter.notifyDataSetChanged();
+        Adapter.notifyDataSetChanged(); //Tells the adapter the data is changed, so it redraws itself
     }
+
+    /**
+     *  Sets the image dimensions
+     * @param width
+     * Width in dp
+     * @param height
+     * Height in dp
+     */
 
     public void setImgDimension(int width, int height){
-        R.dimen.img_height = height;
+        width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, width, getResources().getDisplayMetrics());
+        height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, height, getResources().getDisplayMetrics());
+        Adapter.setHeight(height);
+        Adapter.setWidth(width);
     }
 
-    public void init(){
+    private void init(){
         this.setOrientation(LinearLayout.VERTICAL);
         RecyclerView = new RecyclerView(getContext());
 
@@ -75,11 +94,19 @@ public class Carousel extends LinearLayout {
 
         RecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
+            //Calculates the true position of the item in the middle of the screen and translates it to a precentage and displays on the bar
             public void onScrolled(@NonNull android.support.v7.widget.RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                //int firstPos = ((LinearLayoutManager)LayoutManager).findFirstVisibleItemPosition();
 
-                int lastPos = ((LinearLayoutManager)LayoutManager).findLastVisibleItemPosition() - 1;
+                super.onScrolled(recyclerView, dx, dy);
+                int firstPos = ((LinearLayoutManager)LayoutManager).findFirstVisibleItemPosition();
+
+
+
+                int lastPos = ((LinearLayoutManager)LayoutManager).findLastVisibleItemPosition();
+
+                int posDif = Math.abs(firstPos - lastPos)/2;
+
+                lastPos -= posDif;
 
                 lastPos = Math.abs(lastPos);
 
@@ -93,10 +120,18 @@ public class Carousel extends LinearLayout {
             }
         });
         bar.setClickable(false);
+        bar.setFocusableInTouchMode(false);
         bar.getThumb().setColorFilter(Color.BLUE, PorterDuff.Mode.MULTIPLY);
         //bar.animate();
 
         bar.setProgressTintList(ColorStateList.valueOf(Color.TRANSPARENT));
+        //Makes bar not touchable
+        bar.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
 
         this.addView(RecyclerView);
         this.addView(bar);

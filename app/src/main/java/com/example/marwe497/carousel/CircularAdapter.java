@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,6 +19,25 @@ class CircularAdapter extends RecyclerView.Adapter<CircularAdapter.ItemViewHolde
     private ArrayList<ListItem> itemList;
     private Context context;
 
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    private int height = R.dimen.img_height;
+    private int width = R.dimen.img_width;
+
     public CircularAdapter(ArrayList<ListItem> list, Context context) {
         itemList = list;
         this.context = context;
@@ -27,17 +47,34 @@ class CircularAdapter extends RecyclerView.Adapter<CircularAdapter.ItemViewHolde
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View ItemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_item, viewGroup, false);
+
+
+
         ItemViewHolder viewHolder = new ItemViewHolder(ItemView);
+
+
+        ImageView img = viewHolder.imageView;
+        //Sets the dimensions of the image
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(getWidth(), getHeight());
+
+        img.setLayoutParams(params);
 
         return viewHolder;
     }
 
-
+    /**
+     * Gets the particular item with the help of modulo
+     * @param position
+     * @return
+     */
     public ListItem getItem(int position){
         return itemList.get(position%itemList.size());
     }
 
     @Override
+    /**
+     *Gets the resources from the ListItem
+     */
     public void onBindViewHolder(@Nullable ItemViewHolder viewHolder, int position) {
         viewHolder.imageView.setImageResource(getItem(position).getImgDrawable());
         viewHolder.txtview.setText(getItem(position).getText());
@@ -50,6 +87,11 @@ class CircularAdapter extends RecyclerView.Adapter<CircularAdapter.ItemViewHolde
     }
 
     @Override
+    /**
+     * Sets the carousels ItemCount to the max value of an integer
+     * So that it will continue looking for more items at the end of the list
+     * So it is not in fact infinite.
+     */
     public int getItemCount() {
         return Integer.MAX_VALUE;
     }
@@ -65,6 +107,10 @@ class CircularAdapter extends RecyclerView.Adapter<CircularAdapter.ItemViewHolde
         }
     }
 
+    /**
+     * Gets the amount of items in the carousel
+     * @return
+     */
     public int getTrueLength(){
         return itemList.size();
     }
